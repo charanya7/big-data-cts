@@ -45,4 +45,4 @@ hive
   describe customer
   select * from customer;
   select * from customer where country="INDIA";
-  #write any queries you need
+  #write any sql queries you need
