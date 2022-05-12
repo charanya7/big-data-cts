@@ -1,0 +1,48 @@
+sqoop-import --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --hive-import
+hive
+  140  cd
+  141  hive
+  142  cd hadoop-2.7.1/
+  143  cd sbin
+  144  stop-all.sh
+  145  dfs
+  146  jps
+  147  start-all.sh
+  148  jps
+  149  cd
+  150  hive
+  151  hadoop fs -safemode leave #not worked
+  152  hdfs dfs -safemode leave #not worked
+  153  hadoop dfsadmin -safemode leave #worked
+  154  hive
+  155  hdfs dfs -rm /user/ubh01/customer
+  156  sqoop-import --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --hive-import
+  157  cd $HIVE/lib
+  158  cd
+  159  cd apache-hive-2.3.2-bin/lib
+  160  cp hi
+  161  cp hive-common-2.3.2.jar /home/ubh01/sqoop-1.4.7.bin__hadoop-2.6.0/lib/
+  162  cp /home/ubh01/apache-hive-2.3.2-bin/lib/hive-common-2.3.2.jar /home/ubh01/sqoop-1.4.7.bin__hadoop-2.6.0/lib/
+  163  cd
+  164  sqoop-import --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --hive-import
+  165  hdfs dfs -rm /user/ubh01/customer
+  166  hdfs dfs -rm -rvf /user/ubh01/customer #notworked
+  167  sqoop-import --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --hive-import
+  168  hdfs dfs -rm -r /user/ubh01/customer #worked
+  169  sqoop-import --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --hive-import
+  170   #above worked
+  hive
+  171  history
+  
+  summary:
+  order of execution:
+  line 162
+  line 168
+  line 169
+  hive
+  use default;
+  show tables;
+  describe customer
+  select * from customer;
+  select * from customer where country="INDIA";
+  #write any queries you need
