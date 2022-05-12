@@ -34,7 +34,7 @@ hive
   hive
   171  history
   
-  summary:
+  summary for above history:
   order of execution:
   line 162
   line 168
@@ -46,3 +46,13 @@ hive
   select * from customer;
   select * from customer where country="INDIA";
   #write any sql queries you need
+
+
+
+
+
+
+export code:
+
+mysql -h cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com -u cdb22w011 -p
+sqoop-export --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --update-key cust_id --update-mode allowinsert --export-dir /input/customer.txt
