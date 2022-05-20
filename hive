@@ -69,6 +69,12 @@ fields terminated by ','
 TBLPROPERTIES ("skip.header.line.count"="1");
 
 load data inpath '/new/studentdata.csv' overwrite into table karthick;
+
+for next time inpath  will be changed.
+hdfs dfs -ls /user/hive/warehouse/karthick.db/karthick
+
+load data inpath '/user/hive/warehouse/karthick.db/karthick/studentdata.csv' overwrite into table karthick;
+
 =============================================================================
 create external table karthick(
 age int,
