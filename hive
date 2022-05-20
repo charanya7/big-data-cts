@@ -77,6 +77,8 @@ load data inpath '/user/hive/warehouse/karthick.db/karthick/studentdata.csv' ove
 
 if you want load data from linux(not from hdfs) use 'local' word as below:
 load data local inpath '/home/ubh01/studentdata.csv' overwrite into table karthick;
+
+If you don't specify 'overwrite' in above command the rows will be append into it.
 =============================================================================
 create external table karthick(
 age int,
