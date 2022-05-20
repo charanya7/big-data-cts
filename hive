@@ -33,7 +33,7 @@ hive
   170   #above worked
   hive
   171  history
-  
+  --------------------------------------------------------------------------------------------
   summary for above history:
   order of execution:
   line 162
@@ -46,20 +46,14 @@ hive
   select * from customer;
   select * from customer where country="INDIA";
   #write any sql queries you need
-
-
-
-
-
-
+--------------------------------------------------------------------------------------
 export code:
 
 mysql -h cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com -u cdb22w011 -p
 sqoop-export --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 -P --table customer --update-key cust_id --update-mode allowinsert --export-dir /input/customer.txt
 with password for above command:
 sqoop-export --connect jdbc:mysql://cdb22dw011.c0lf9xyp8cv9.ap-south-1.rds.amazonaws.com/test --username cdb22dw011 --password Welcome!12345 -P --table customer --update-key cust_id --update-mode allowinsert --export-dir /input/customer.txt
-
-
+-----------------------------------------------------------------------------------------
 #By Default if you create any table those are internal table
 #if you drop the table -> data alsp avalible oh HDFS
 create table karthick(
@@ -85,3 +79,58 @@ email string)
 row format delimited
 fields terminated by ','
 TBLPROPERTIES ("skip.header.line.count"="1");
+-------------------------------------------------------------------------------------------
+create table stat_part(
+age int,
+gender string,
+name string,
+roll int,
+marks string,
+email string
+)partitioned by (course string);
+ 
+insert into table stat_part partition(course = 'DB') select age,gender,name,roll, marks,email from karthick where course = 'DB';
+
+---------------------------------------------------------------------------------------------------
+
+Dynamic Partition
+ 
+create table dyna_part(
+age int,
+gender string,
+name string,
+roll int,
+marks string,
+email string
+)partitioned by (course string);
+ 
+set hive.exec.dynamic.partition.mode=nonstrict;
+ 
+insert into table dyna_part partition(course) select age,gender,name,roll, marks,email,course from karthick where course = 'DB';
+-----------------------------------------------------------------------------------------------------------------------
+https://www.javatpoint.com/partitioning-in-hive
+--------------------------------------------------------------------------------------------------------------------
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.enforce.bucketing=true;
+=========================================================
+create table karthick_bucket(
+age int,
+gender string,
+name string,
+course string,
+roll int,
+marks int,
+email string)
+clustered by(age) into 2 buckets stored as textfile;
+=============================================================
+create table selvam_bucket(
+age int,
+gender string,
+name string,
+course string,
+roll int,
+marks int,
+email string)
+clustered by(course) into 6 buckets stored as textfile;
+---------------------------------------------------------------------------------------------------------------
