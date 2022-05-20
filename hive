@@ -91,6 +91,11 @@ email string)
 row format delimited
 fields terminated by ','
 TBLPROPERTIES ("skip.header.line.count"="1");
+
+Unlike in internal table, when we drop a table--> the file in hdfs location also got deleted and changed into /warehouse/karthick.db,
+but if you we use external table we don't get such change of location.
+
+If we load dat from local(linux) then either it is internal or external table nothing can change the location. 
 -------------------------------------------------------------------------------------------
 create table stat_part(
 age int,
