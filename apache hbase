@@ -6,3 +6,137 @@ status
 version
 whoami
 table_help
+
+#command for table creation:
+create 'sc-tb1','tb1-cf1'
+#command to view all tables created:
+list
+#to view table contents
+get_table 'sc-tb1'
+
+#input data into table with primary key 1 (pk1)
+put 'sc-tb1','pk1','tb1-cf1:name','charanya'
+put 'sc-tb1','pk1','tb1-cf1:age','20'
+put 'sc-tb1','pk1','tb1-cf1:occupation','engineer'
+
+#see data in pk2
+get 'sc-tb1','pk1'
+---------------------------------------------------------------------------------------
+#examples
+hbase(main):005:0> get 'sc-tb1','pk1'
+COLUMN                                CELL                                                                                                        
+ tb1-cf1:age                          timestamp=1653120260016, value=20                                                                           
+ tb1-cf1:name                         timestamp=1653120246088, value=charanya                                                                     
+ tb1-cf1:occupation                   timestamp=1653120272111, value=engineer                                                                     
+3 row(s) in 0.0510 seconds
+hbase(main):008:0> put 'sc-tb1','pk2','tb1-cf1:name','karthick'
+0 row(s) in 0.0090 seconds
+
+hbase(main):009:0> put 'sc-tb1','pk2','tb1-cf1:occupation','trainer'
+0 row(s) in 0.0090 seconds
+
+hbase(main):010:0> get 'sc-tb1','pk2'
+COLUMN                                CELL                                                                                                        
+ tb1-cf1:name                         timestamp=1653120465623, value=karthick                                                                     
+ tb1-cf1:occupation                   timestamp=1653120472152, value=trainer                                                                      
+2 row(s) in 0.0170 seconds
+============================================================================================
+#another way of creating tables
+hbase(main):016:0> create 'empl','personal data','professional data'
+0 row(s) in 1.3110 seconds
+
+=> Hbase::Table - empl
+hbase(main):017:0> list
+TABLE                                                                                                                                             
+empl                                                                                                                                              
+sc-tb1                                                                                                                                            
+2 row(s) in 0.0090 seconds
+
+=> ["empl", "sc-tb1"]
+hbase(main):018:0> put 'empl','1','personal data:name','cherry'
+0 row(s) in 0.0200 seconds
+
+hbase(main):019:0> put 'empl','1','personal data:city','badvel'
+0 row(s) in 0.0060 seconds
+
+hbase(main):020:0> put 'empl','1','personal data:age','20'
+0 row(s) in 0.0060 seconds
+
+hbase(main):021:0> get 'empl','personal data'
+COLUMN                                CELL                                                                                                        
+0 row(s) in 0.0070 seconds
+
+hbase(main):022:0> get 'empl','1'
+COLUMN                                CELL                                                                                                        
+ personal data:age                    timestamp=1653121562779, value=20                                                                           
+ personal data:city                   timestamp=1653121551535, value=badvel                                                                       
+ personal data:name                   timestamp=1653121538897, value=cherry                                                                       
+3 row(s) in 0.0090 seconds
+
+hbase(main):023:0> put 'empl','2','personal data:name','cherry1'
+0 row(s) in 0.0060 seconds
+
+hbase(main):024:0> put 'empl','2','personal data:age','20@'
+0 row(s) in 0.0140 seconds
+
+hbase(main):025:0> put 'empl','2','personal data:city','badvel1'
+0 row(s) in 0.0040 seconds
+
+hbase(main):026:0> get 'empl','2'
+COLUMN                                CELL                                                                                                        
+ personal data:age                    timestamp=1653121676985, value=20@                                                                          
+ personal data:city                   timestamp=1653121690400, value=badvel1                                                                      
+ personal data:name                   timestamp=1653121659068, value=cherry1                                                                      
+3 row(s) in 0.0060 seconds
+------------------------------------------------------------------------------------
+hbase(main):027:0> put 'empl','2','professional data:desig','manager'
+0 row(s) in 0.0060 seconds
+
+hbase(main):028:0> put 'empl','1','professional data:desig','engineer'
+0 row(s) in 0.0090 seconds
+
+hbase(main):029:0> get 'empl','1'
+COLUMN                                CELL                                                                                                        
+ personal data:age                    timestamp=1653121562779, value=20                                                                           
+ personal data:city                   timestamp=1653121551535, value=badvel                                                                       
+ personal data:name                   timestamp=1653121538897, value=cherry                                                                       
+ professional data:desig              timestamp=1653121787693, value=engineer                                                                     
+4 row(s) in 0.0120 seconds
+
+hbase(main):030:0> get 'empl','2'
+COLUMN                                CELL                                                                                                        
+ personal data:age                    timestamp=1653121676985, value=20@                                                                          
+ personal data:city                   timestamp=1653121690400, value=badvel1                                                                      
+ personal data:name                   timestamp=1653121659068, value=cherry1                                                                      
+ professional data:desig              timestamp=1653121774449, value=manager                                                                      
+4 row(s) in 0.0180 seconds
+============================================================================================
+#another way of retrieval of data
+
+hbase(main):033:0> get 'empl','1','professional data:desig'
+COLUMN                                CELL                                                                                                        
+ professional data:desig              timestamp=1653121787693, value=engineer                                                                     
+1 row(s) in 0.0060 seconds
+=============================================================================================
+#another way fo retrieval of data
+
+hbase(main):034:0> scan 'empl'
+ROW                                   COLUMN+CELL                                                                                                 
+ 1                                    column=personal data:age, timestamp=1653121562779, value=20                                                 
+ 1                                    column=personal data:city, timestamp=1653121551535, value=badvel                                            
+ 1                                    column=personal data:name, timestamp=1653121538897, value=cherry                                            
+ 1                                    column=professional data:desig, timestamp=1653121787693, value=engineer                                     
+ 2                                    column=personal data:age, timestamp=1653121676985, value=20@                                                
+ 2                                    column=personal data:city, timestamp=1653121690400, value=badvel1                                           
+ 2                                    column=personal data:name, timestamp=1653121659068, value=cherry1                                           
+ 2                                    column=professional data:desig, timestamp=1653121774449, value=manager                                      
+2 row(s) in 0.0370 seconds
+=============================================================================================================
+enable 'empl'
+disable 'empl'
+describe 'empl'
+------------------------------------------------------------------------------------------------------------
+before dropping we have to disable the table
+disbale 'empl'
+drop 'empl'
+-------------------------------------------------------------------------------------------------------------
