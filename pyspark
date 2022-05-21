@@ -6,7 +6,35 @@ num=[1,2,3,4,5,6,7,8,9,10]
 rdd=sc.parallelize(num)
 print(rdd) #prints like below
 #ParallelCollectionRDD[0] at readRDDFromInputStream at PythonRDD.scala:413
+
 rdd.collect() #prints the list(below)
 #Out[19]: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 rdd.take(8) #prints first 8 objects
 Out[20]: [1, 2, 3, 4, 5, 6, 7, 8]
+
+karthick = sc.parallelize(["demo","demo1","demo2","demo3","demo4"])
+karthick.collect()
+# COMMAND ----------
+karthicktuple = (1,2,3,4,5,6,7,8,9,10)
+print(type(karthicktuple))
+karthickset = {1,2,3,4,5,6,7,8,9,10}
+print(type(karthickset))
+karthickdict={"fname":"karthick","lname":"selvam","age":33,"occupation":"trainer"}
+print(type(karthickdict))
+# COMMAND ----------
+tuplerdd = sc.parallelize(karthicktuple)
+setrdd = sc.parallelize(karthickset)
+dictrdd = sc.parallelize(karthickdict)
+# COMMAND ----------
+print(tuplerdd.collect())
+print(setrdd.collect())
+print(dictrdd.collect())
+# COMMAND ----------
+tuplerdd1 = sc.parallelize((1,2,3,4,5,6,7,8,9,10))
+setrdd1 = sc.parallelize({1,2,3,4,5,6,7,8,9,10})
+dictrdd1 = sc.parallelize({"fname":"karthick","lname":"selvam","age":33,"occupation":"trainer"})
+# COMMAND ----------
+print(tuplerdd1.collect())
+print(setrdd1.collect())
+print(dictrdd1.collect())
