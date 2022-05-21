@@ -1,3 +1,12 @@
 import pyspark
 from pyspark import SparkContext, SparkConf
-conf=SparkConf().setAppName("demo program")
+cherry=SparkConf().setAppName("demo program")
+sc=SparkContext.getOrCreate(conf=cherry)
+num=[1,2,3,4,5,6,7,8,9,10]
+rdd=sc.parallelize(num)
+print(rdd) #prints like below
+#ParallelCollectionRDD[0] at readRDDFromInputStream at PythonRDD.scala:413
+rdd.collect() #prints the list(below)
+#Out[19]: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+rdd.take(8) #prints first 8 objects
+Out[20]: [1, 2, 3, 4, 5, 6, 7, 8]
