@@ -96,7 +96,20 @@ Unlike in internal table, when we drop a table--> the file in hdfs location also
 but if you we use external table we don't get such change of location.
 
 If we load dat from local(linux) then either it is internal or external table nothing can change the location. 
--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+we can load data from table into another table:
+
+create table dupl(
+age int,
+gender string,
+name string,
+course string,
+roll int,
+marks int,
+email string);
+
+insert into table dupl select * from karthick;
+--------------------------------------------------------------------------------------------------------------------------------------------
 create table stat_part(
 age int,
 gender string,
@@ -125,6 +138,19 @@ email string
 set hive.exec.dynamic.partition.mode=nonstrict;
  
 insert into table dyna_part partition(course) select age,gender,name,roll, marks,email,course from karthick where course = 'DB';
+insert into table dyna_part partition(course) select age,gender,name,roll, marks,email,course from karthick where course = 'PF';
+insert into table dyna_part partition(course) select age,gender,name,roll, marks,email,course from karthick where course = 'Cloud';
+
+Similar to static partition we will have stored in hive--> warehouse--> dyna_part -->course=.... # in alphabetical order
+#only difference between static and dynamic partition is mentioning in course double times.
+
+ubh01@ubh01:~$ hdfs dfs -ls /user/hive/warehouse/dyna_part
+22/05/21 07:35:54 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Found 3 items
+drwxrwxr-x   - ubh01 supergroup          0 2022-05-21 07:34 /user/hive/warehouse/dyna_part/course=Cloud
+drwxrwxr-x   - ubh01 supergroup          0 2022-05-21 07:32 /user/hive/warehouse/dyna_part/course=DB
+drwxrwxr-x   - ubh01 supergroup          0 2022-05-21 07:34 /user/hive/warehouse/dyna_part/course=PF
+
 -----------------------------------------------------------------------------------------------------------------------
 https://www.javatpoint.com/partitioning-in-hive
 --------------------------------------------------------------------------------------------------------------------
