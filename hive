@@ -107,7 +107,8 @@ email string
 )partitioned by (course string);
  
 insert into table stat_part partition(course = 'DB') select age,gender,name,roll, marks,email from karthick where course = 'DB';
-
+insert into table stat_part partition(course = 'PF') select age,gender,name,roll, marks,email from karthick where course = 'PF';
+insert into table stat_part partition(course = 'Cloud') select age,gender,name,roll, marks,email from karthick where course = 'Cloud';
 ---------------------------------------------------------------------------------------------------
 
 Dynamic Partition
