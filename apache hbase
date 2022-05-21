@@ -1,0 +1,8 @@
+# after alll daemons started
+start-hbase.sh
+hbase shell
+# now hbase will be opened
+status
+version
+whoami
+table_help
