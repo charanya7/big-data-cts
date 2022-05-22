@@ -112,4 +112,1003 @@ rddfil = rdd.filter(fil)
 # COMMAND ----------
 rddfil.collect()
 ===========================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("Remove Words start with a anc c")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+#Remove the words that start wiith a and c
+words = sc.textFile("/FileStore/tables/words.txt")
+# COMMAND ----------
+words.collect()
+# COMMAND ----------
+#convert the RDD as in the format of Words
+splitwords = words.flatMap(lambda x: x.split(" "))
+splitwords.collect()
+# COMMAND ----------
+def aandc(x):
+if x.startswith("a") or x.startswith("c"):
+return False
+else:
+return True
+# COMMAND ----------
+print(aandc("apple"))
+# COMMAND ----------
+filtera = splitwords.filter(aandc)
+# COMMAND ----------
+filtera.collect()
+========================================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("Remove Words start with a anc c")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+#Remove the words that start wiith a and c
+words = sc.textFile("/FileStore/tables/words.txt")
+# COMMAND ----------
+words.collect()
+# COMMAND ----------
+#convert the RDD as in the format of Words
+splitwords = words.flatMap(lambda x: x.split(" "))
+splitwords.collect()
+# COMMAND ----------
+def aandc(x):
+if x.startswith("a") or x.startswith("c"):
+return False
+else:
+return True
+# COMMAND ----------
+print(aandc("apple"))
+# COMMAND ----------
+filtera = splitwords.filter(aandc)
+# COMMAND ----------
+filtera.collect()
+============================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("groupby")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+words = sc.textFile("/FileStore/tables/words-1.txt")
+# COMMAND ----------
+flatwords = words.flatMap(lambda x: x.split(" "))
+# COMMAND ----------
+flatwords.collect()
+# COMMAND ----------
+finaltxt = flatwords.map(lambda x: (x,1))
+# COMMAND ----------
+finaltxt.collect()
+# COMMAND ----------
+finaltxt.groupByKey().mapValues(len).collect()
+# COMMAND ----------
+finaltxt.groupByKey().mapValues(list).collect()
+# COMMAND ----------
+=======================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("reduceby")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+words = sc.textFile("/FileStore/tables/words-1.txt")
+# COMMAND ----------
+flatwords = words.flatMap(lambda x: x.split(" "))
+# COMMAND ----------
+finaltxt = flatwords.map(lambda x: (x,1))
+finaltxt.collect()
+# COMMAND ----------
+finaltxt.reduceByKey(lambda x,y: x+y).collect()
+# COMMAND ----------
+==========================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("reduceby")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+words = sc.textFile("/FileStore/tables/words-1.txt")
+flatwords = words.flatMap(lambda x: x.split(" "))
+# COMMAND ----------
+flatwords.collect()
+# COMMAND ----------
+demo = flatwords.count()
+print(type(demo))
+# COMMAND ----------
+karthick = flatwords.countByValue()
+# COMMAND ----------
+print(karthick)
+# COMMAND ----------
+print(type(karthick))
+# COMMAND ----------
+karthick = flatwords.collect()
+# COMMAND ----------
+print(type(karthick))
+# COMMAND ----------
+============================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("reduceby")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+x = sc.parallelize([("spark", 1), ("hadoop", 4)])
+y = sc.parallelize([("spark", 2), ("hadoop", 5)])
+# COMMAND ----------
+print(x.collect())
+print(y.collect())
+# COMMAND ----------
+joined = x.join(y)
+print(type(joined))
+print(joined.collect())
+# COMMAND ----------
+rdd1 = sc.parallelize([1, 10, 2, 3, 4, 5])
+rdd2 = sc.parallelize([1, 6, 2, 3, 7, 8])
+rdd1.intersection(rdd2).collect()
+# COMMAND ----------
+=========================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("reduceby")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+words = sc.textFile("/FileStore/tables/words-1.txt")
+flatwords = words.flatMap(lambda x: x.split(" "))
+# COMMAND ----------
+flatwords.getNumPartitions()
+# COMMAND ----------
+flatwords.collect()
+# COMMAND ----------
+flatwords.saveAsTextFile("/FileStore/result123/")
+# COMMAND ----------
+karthick = flatwords.repartition(5)
+# COMMAND ----------
+karthick.getNumPartitions()
+# COMMAND ----------
+karthick.saveAsTextFile("/FileStore/result1234/")
+# COMMAND ----------
+demo = karthick.coalesce(1)
+# COMMAND ----------
+demo.getNumPartitions()
+# COMMAND ----------
+demo.saveAsTextFile("/FileStore/result12345/")
+# COMMAND ----------
+=====================================================================================
+The Shawshank Redemption,3
+The Matrix,5
+12 Angry Men,3
+12 Angry Men,4
+The Matrix,5
+Pulp Fiction,4
+The Godfather,5
+The Shawshank Redemption,2
+Pulp Fiction,4
+The Godfather,5
+12 Angry Men,2
+The Godfather,3
+Pulp Fiction,4
+12 Angry Men,1
+The Shawshank Redemption,2
+12 Angry Men,1
+The Shawshank Redemption,5
+Pulp Fiction,5
+Pulp Fiction,2
+The Matrix,4
+=========================================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("average")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+ratings = sc.textFile("/FileStore/tables/movie_ratings.csv")
+# COMMAND ----------
+ratings.collect()
+# COMMAND ----------
+rdd2 = ratings.map(lambda x: (x.split(",")[0],(int(x.split(",")[1]),1)))
+rdd2.collect()
+# COMMAND ----------
+rdd3 = rdd2.reduceByKey(lambda x,y: (x[0]+y[0],x[1]+y[1]))
+rdd3.collect()
+# COMMAND ----------
+rdd4 = rdd3.map(lambda x: (x[0],x[1][0]/x[1][1]))
+rdd4.collect()
+# COMMAND ----------
+=========================================================================================
+# Databricks notebook source
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("average")
+sc = SparkContext.getOrCreate(conf=karthick)
+# COMMAND ----------
+rdd = sc.textFile("/FileStore/tables/movie_ratings.csv")
+rdd.collect()
+# COMMAND ----------
+x = 3
+y = 4
+x if x > y else y
+# COMMAND ----------
+rdd2 = rdd.map(lambda x: (x.split(',')[0],int(x.split(',')[1])))
+rdd2.collect()
+# COMMAND ----------
+rdd2.reduceByKey(lambda x,y: x if x <y else y).collect()
+# COMMAND ----------
+rdd2.reduceByKey(lambda x,y: x if x > y else y).collect()
+# COMMAND ----------
+============================================================================================
+# Databricks notebook source
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName("Mini Project")
+sc = SparkContext.getOrCreate(conf=conf)
+# COMMAND ----------
+rdd = sc.textFile('/FileStore/tables/StudentData.csv')
+headers = rdd.first()
+rdd = rdd.filter(lambda x: x!=headers)
+rdd = rdd.map(lambda x: x.split(','))
+# COMMAND ----------
+# 1
+rdd.count()
+# COMMAND ----------
+# 2
+rdd2 = rdd
+rdd2 = rdd2.map(lambda x: (x[1], int(x[5])))
+rdd2 = rdd2.reduceByKey(lambda x,y : x+y)
+rdd2.collect()
+# COMMAND ----------
+#3
+rdd3 = rdd
+passed = rdd3.filter(lambda x: int(x[5]) > 50).count()
+failed = rdd3.filter(lambda x: int(x[5]) <= 50).count()
+print(passed,failed)
+passed2 = rdd3.filter(lambda x: int(x[5]) > 50).count()
+failed2 = rdd.count() - passed2
+print(passed2,failed2)
+# COMMAND ----------
+# 4
+rdd4 = rdd
+rdd4 = rdd4.map(lambda x: (x[3],1))
+rdd4.reduceByKey(lambda x,y: x+y).collect()
+# COMMAND ----------
+# 5
+rdd5 = rdd
+rdd5 = rdd5.map(lambda x: (x[3], int(x[5])))
+rdd5.reduceByKey(lambda x,y: x+y).collect()
+# COMMAND ----------
+# 6
+rdd6 = rdd
+rdd6 = rdd6.map(lambda x: (x[3], (int(x[5]), 1) ))
+rdd6 = rdd6.reduceByKey( lambda x,y : (x[0] + y[0], x[1] + y[1]))
+rdd6.map(lambda x: (x[0], (x[1][0] / x[1][1]))).collect()
+rdd6.mapValues(lambda x: (x[0] / x[1])).collect()
+# COMMAND ----------
+# 7
+rdd7 = rdd
+rdd7 = rdd7.map(lambda x: (x[3], int(x[5])))
+print(rdd7.reduceByKey(lambda x,y: x if x > y else y).collect())
+print(rdd7.reduceByKey(lambda x,y: x if x < y else y).collect())
+# COMMAND ----------
+# 8
+rdd8 = rdd
+rdd8 = rdd8.map( lambda x: ( x[1] , ( int(x[0]), 1 ) ) )
+rdd8 = rdd8.reduceByKey(lambda x,y: ( x[0] + y[0], x[1] + y[1] )  )
+rdd8.mapValues(lambda x: x[0]/x[1]).collect()
+=====================================================================================
+# Databricks notebook source
+import pyspark.sql
+ 
+# COMMAND ----------
+ 
+# Databricks notebook source
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+ 
+# COMMAND ----------
+ 
+print(spark)
+ 
+# COMMAND ----------
+ 
+print(type(spark))
+ 
+# COMMAND ----------
+ 
+df = spark.read.option("header","True").csv("/FileStore/tables/StudentData.csv")
+ 
+# COMMAND ----------
+ 
+df.show()
+ 
+# COMMAND ----------
+ 
+df.printSchema()
+ 
+# COMMAND ----------
+ 
+df = spark.read.options(inferSchema='True', header='True', delimiter=',').csv("/FileStore/tables/StudentData.csv")
+ 
+# COMMAND ----------
+ 
+df.printSchema()
+ 
+# COMMAND ----------
+ 
+df.show()
+ 
+# COMMAND ----------
+ 
+df.createOrReplaceTempView("karthick")
+ 
+# COMMAND ----------
+ 
+spark.sql("select course, gender, count(*) from karthick group by course, gender").show()
+ 
+# COMMAND ----------
+ 
+df.groupBy("course", "gender").count().show()
+ 
+# COMMAND ----------
+ 
+df.show()
+ 
+# COMMAND ----------
+ 
+df.collect()
+ 
+# COMMAND ----------
+ =============================================================================================
+ # Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+ 
+# COMMAND ----------
+ 
+df = spark.read.options(inferSchema='True', header='True', delimiter=',').csv('/FileStore/tables/StudentData.csv')
+#df.show()
+df.printSchema()
+ 
+# COMMAND ----------
+ 
+from pyspark.sql.types import StructType #Tables,
+from pyspark.sql.types import StructField #columns
+from pyspark.sql.types import StringType #string data type
+from pyspark.sql.types import IntegerType #integer data type
+ 
+# COMMAND ----------
+ 
+karthick = StructType([
+                    StructField("age", IntegerType(), True),
+                    StructField("gender", StringType(), True),
+                    StructField("name", StringType(), True),
+                    StructField("course", StringType(), True),
+                    StructField("roll", StringType(), True),
+                    StructField("marks", IntegerType(), True),
+                    StructField("email", StringType(), True)
+])
+ 
+# COMMAND ----------
+ 
+df = spark.read.options(header='True').schema(karthick).csv('/FileStore/tables/StudentData.csv')
+ 
+# COMMAND ----------
+ 
+df.printSchema()
+ 
+# COMMAND ----------
+ 
+df.show()
+ 
+# COMMAND ----------
+ =======================================================================================================
+ # Databricks notebook source
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName("RDD")
+sc = SparkContext.getOrCreate(conf=conf)
+ 
+# COMMAND ----------
+ 
+rdd = sc.textFile('/FileStore/tables/StudentData.csv')
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+headers = rdd.first()
+print(headers)
+ 
+# COMMAND ----------
+ 
+rdd = rdd.filter(lambda x: x != headers).map(lambda x: x.split(','))
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+print(type(headers))
+ 
+# COMMAND ----------
+ 
+columns = headers.split(',')
+print(columns)
+ 
+# COMMAND ----------
+ 
+#format of syntax to convert the rdd to data frame
+dfRdd = rdd.toDF(columns)
+ 
+# COMMAND ----------
+ 
+dfRdd.show()
+ 
+# COMMAND ----------
+ 
+dfRdd.printSchema()
+ 
+# COMMAND ----------
+================================================================================================
+# Databricks notebook source
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName("RDD")
+sc = SparkContext.getOrCreate(conf=conf)
+ 
+# COMMAND ----------
+ 
+rdd = sc.textFile('/FileStore/tables/StudentData.csv')
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+headers = rdd.first()
+print(headers)
+ 
+# COMMAND ----------
+ 
+headers = rdd.first()
+print(headers)
+ 
+# COMMAND ----------
+ 
+columns = headers.split(',')
+print(columns)
+ 
+# COMMAND ----------
+ 
+rdd = rdd.filter(lambda x: x != headers).map(lambda x: x.split(','))
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+ 
+# COMMAND ----------
+ 
+schema = StructType([
+                    StructField("age", IntegerType(), True),
+                    StructField("gender", StringType(), True),
+                    StructField("name", StringType(), True),
+                    StructField("course", StringType(), True),
+                    StructField("roll", StringType(), True),
+                    StructField("marks", IntegerType(), True),
+                    StructField("email", StringType(), True)
+])
+ 
+# COMMAND ----------
+ 
+rdd = rdd.map(lambda x: [int(x[0]), x[1], x[2], x[3], x[4], int(x[5]), x[6]])
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+dfRdd = spark.createDataFrame(rdd, schema=schema)
+ 
+# COMMAND ----------
+ 
+dfRdd.show()
+ 
+# COMMAND ----------
+ 
+dfRdd.printSchema()
+ ===========================================================================================
+ # Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+ 
+# COMMAND ----------
+ 
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+ 
+# COMMAND ----------
+ 
+df.select("name","gender").show()
+ 
+# COMMAND ----------
+ 
+df.select(df.name, df.email).show()
+ 
+# COMMAND ----------
+ 
+from pyspark.sql.functions import col
+ 
+# COMMAND ----------
+ 
+df.select(col("ROLL m "), col("name")).show()
+ 
+# COMMAND ----------
+ 
+df.select('*').show()
+ 
+# COMMAND ----------
+ 
+df.select(df.columns[2:6]).show()
+ 
+# COMMAND ----------
+ 
+df2 = df.select(col("roll"), col("name"))
+df2.show()
+ 
+# COMMAND ----------
+=========================================================================================
+# Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+ 
+# COMMAND ----------
+ 
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+ 
+# COMMAND ----------
+ 
+df.printSchema()
+ 
+# COMMAND ----------
+ 
+df = df.withColumn("roll", col("roll").cast("String"))
+ 
+# COMMAND ----------
+ 
+df.printSchema()
+ 
+# COMMAND ----------
+ 
+df = df.withColumn("marks", col('marks') + 10)
+df.show()
+ 
+# COMMAND ----------
+ 
+df = df.withColumn("aggregated marks", col('marks') - 10)
+df.show()
+ 
+# COMMAND ----------
+ 
+df = df.withColumn("name", lit("USA"))
+df.show()
+ 
+# COMMAND ----------
+ 
+df = df.withColumn("marks", col("marks") - 10).withColumn("updated marks", col("marks") + 20).withColumn("Country", lit("USA"))
+ 
+# COMMAND ----------
+ 
+df.show()
+ 
+# COMMAND ----------
+ ==========================================================================================================================
+ [5/18 3:33 PM] Karthick Selvam (Guest)
+# Databricks notebook source
+
+# Databricks notebook source
+
+from pyspark.sql import SparkSession
+
+from pyspark.sql.functions import col, lit
+
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate() # COMMAND ---------- df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+
+df.show() # COMMAND ---------- df = df.withColumnRenamed("gender","sex").withColumnRenamed("roll", "roll number")
+
+df.show() # COMMAND ---------- df.select(col("name").alias("Full Name")).show() # COMMAND ---------- 
+
+==================================================================================================================================
+
+# Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+
+
+
+# COMMAND ----------
+
+
+
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.course == "DB").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(col("course") == "DB").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter( (df.course == "DB") & (df.marks > 50) ).show()
+
+
+
+# COMMAND ----------
+
+
+
+courses = ["DB", "Cloud", "OOP", "DSA"]
+print(courses)
+print(type(courses))
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.course.isin(courses)).show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.course.startswith("DS")).show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.name.endswith("se")).show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.name.contains("se")).show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.name.like('%s%e%')).show()
+
+=========================================================================================================
+# Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+
+
+
+# COMMAND ----------
+
+
+
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.course == "DB").count()
+
+
+
+# COMMAND ----------
+
+
+
+df.select("gender").distinct().show()
+
+
+
+# COMMAND ----------
+
+
+
+df.select("course").distinct().count()
+
+
+
+# COMMAND ----------
+
+
+
+df.select("roll").distinct().count()
+
+
+
+# COMMAND ----------
+
+
+
+df.filter(df.course == "DB").show()
+
+
+
+# COMMAND ----------
+
+===========================================================================================================
+# Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+
+
+
+# COMMAND ----------
+
+
+
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+
+
+
+# COMMAND ----------
+
+
+
+df.sort(df.marks, df.age).show(1000)
+
+
+
+# COMMAND ----------
+
+
+
+df.orderBy(df.marks, df.age).show()
+
+
+
+# COMMAND ----------
+
+
+
+df.sort(df.marks.asc(), df.age.desc()).show()
+
+
+
+# COMMAND ----------
+=========================================================================================================
+
+# Databricks notebook source
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit
+spark = SparkSession.builder.appName("Spark DataFrames").getOrCreate()
+
+
+
+# COMMAND ----------
+
+
+
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("gender").sum("marks").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("course").sum("marks").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("gender").avg("marks").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("course").avg("marks").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("gender").count().show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("gender").max("marks").show()
+df.groupBy("gender").min("marks").show()
+
+
+
+# COMMAND ----------
+
+
+
+df.groupBy("gender").mean("marks").show()
+
+
+
+# COMMAND ----------
+
+========================================================================================================
+
+# Databricks notebook source
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col,lit,udf
+from pyspark.sql.types import IntegerType, DoubleType
+spark = SparkSession.builder.appName("UDF").getOrCreate()
+# COMMAND ----------
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/OfficeData.csv')
+df.show()
+# COMMAND ----------
+#UDF -> User Defined Functions(Custom Requirements)
+#Simple UDF
+#increase salary for each employee by state
+#if state is NY -> salary by 10% and bonus by 5%
+#if state is CA -> salary by 12% and bonus by 3%
+def karthick(state,salary,bonus):
+demo = 0
+if state == "NY":
+demo = salary * 0.10
+demo += bonus * 0.05
+elif state == "CA":
+demo = salary * 0.12
+demo += bonus * 0.03
+return demo
+# COMMAND ----------
+print(karthick("CA",1000,100))
+# COMMAND ----------
+selvamudf = udf(lambda x,y,z: karthick(x,y,z), DoubleType())
+# COMMAND ----------
+df.withColumn("increment",selvamudf(df.state,df.salary,df.bonus)).show()
+# COMMAND ----------
+
+============================================================================================
+
+employee_name,department,state,salary,age,bonus
+James,Sales,NY,90000,34,10000
+Michael,Sales,NY,86000,56,20000
+Robert,Sales,CA,81000,30,23000
+Maria,Finance,CA,90000,24,23000
+Raman,Finance,CA,99000,40,24000
+Scott,Finance,NY,83000,36,19000
+Jen,Finance,NY,79000,53,15000
+Jeff,Marketing,CA,80000,25,18000
+Kumar,Marketing,NY,91000,50,21000
+==============================================================================================
+
+demo1 = demo
+print(demo1)
+print(type(demo1))
+# COMMAND ----------
+demo2 = demo1
+print(demo2)
+print(type(demo2))
+# COMMAND ----------
+demo3 = demo2
+print(demo3)
+print(type(demo3))
+# COMMAND ----------
+demo4 = demo3
+print(demo4)
+print(type(demo4))
+# COMMAND ----------
+demo4.show()
+# COMMAND ----------
+df.cache()
+# COMMAND ----------
+demo1.cache()
+# COMMAND ----------
+demo2.cache()
+# COMMAND ----------
+demo3.cache()
+# COMMAND ----------
+demo3.persist()
+# COMMAND ----------
+
+======================================================================================
+
+# Databricks notebook source
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("UDF").getOrCreate()
+# COMMAND ----------
+df = spark.read.options(header='True', inferSchema='True').csv('/FileStore/tables/StudentData.csv')
+df.show()
+# COMMAND ----------
+print(df)
+print(type(df))
+# COMMAND ----------
+df.collect()
+# COMMAND ----------
+rdd = df.rdd
+type(rdd)
+# COMMAND ----------
+df.collect()
+# COMMAND ----------
+rdd.filter(lambda x: x[0] == 28).collect()
+# COMMAND ----------
+rdd.take(1)
+# COMMAND ----------
+rdd.filter(lambda x: x["age"] == 28).collect()
+# COMMAND ----------
+
+=========================================================================================================
+
+# Databricks notebook source
+import pyspark
+from pyspark import SparkConf, SparkContext
+from pyspark.streaming import StreamingContext
+# COMMAND ----------
+conf = SparkConf().setAppName("File streaming")
+sc = SparkContext.getOrCreate(conf=conf)
+# COMMAND ----------
+ssc = StreamingContext(sc,10)
+# COMMAND ----------
+rdd = ssc.textFileStream("/FileStore/tables/")
+# COMMAND ----------
+rdd = rdd.map(lambda x: (x,1))
+rdd = rdd.reduceByKey(lambda x,y: x+y)
+rdd.pprint()
+# COMMAND ----------
+ssc.start()
+ssc.awaitTerminationOrTimeout(100000)
+# COMMAND ----------
+
+======================================================================================================
 
