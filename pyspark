@@ -38,3 +38,4 @@ dictrdd1 = sc.parallelize({"fname":"karthick","lname":"selvam","age":33,"occupat
 print(tuplerdd1.collect())
 print(setrdd1.collect())
 print(dictrdd1.collect())
+#for dict it prints only keys not values.
