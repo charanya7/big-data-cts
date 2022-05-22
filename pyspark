@@ -47,46 +47,47 @@ rdd = sc.textFile('FileStore/tables/ch-1.txt') #in this file each num is single 
 rdd.collect()
 # Out[8]: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 # so no.of objects = no.of lines in file
+---------------------------------------------------------------------------------------------------------------
+rdd = sc.textFile('FileStore/tables/ch-1.txt')
+cdbmap=rdd.map(lambda x:(int(x)*100))
+cdbmap.collect()
+#output below
+#Out[9]: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+--------------------------------------------------------------------------------------------------------------
+rdd = sc.textFile('/FileStore/tables/studentdata.txt')
+map=rdd.map(lambda x:len(x))
+map.collect()
+#prints no.of characters in each line
+----------------------------------------------
+#same functioned without lambda(with normal fun)
+def linelen(x):
+    return len(x)
+m=rdd.map(linelen)
+m.collect()
 ================================================================================================================
 # Databricks notebook source
-from pyspark import SparkConf, SparkContext
-conf = SparkConf().setAppName("RDD")
-sc = SparkContext.getOrCreate(conf=conf)
- 
+import pyspark
+from pyspark import SparkContext, SparkConf
+karthick = SparkConf().setAppName("FlatMap")
+sc = SparkContext.getOrCreate(conf=karthick)
 # COMMAND ----------
- 
-rdd = sc.textFile('/FileStore/tables/StudentData.csv')
-rdd.collect()
- 
+sample = sc.textFile("/FileStore/tables/Sample_Quiz.txt")
 # COMMAND ----------
- 
-headers = rdd.first()
-print(headers)
- 
+sample.collect()
 # COMMAND ----------
- 
-rdd = rdd.filter(lambda x: x != headers).map(lambda x: x.split(','))
-rdd.collect()
- 
+flatsample = sample.flatMap(lambda x: x)
+flatsample.collect()
 # COMMAND ----------
- 
-print(type(headers))
- 
+num = sc.parallelize(['1','2','3','4','5','6','7','8','9','10'])
 # COMMAND ----------
- 
-columns = headers.split(',')
-print(columns)
- 
+mapnum = num.map(lambda x: x)
+mapnum.collect()
 # COMMAND ----------
- 
-#format of syntax to convert the rdd to data frame
-dfRdd = rdd.toDF(columns)
- 
+flatmapnum = num.flatMap(lambda x: x)
+flatmapnum.collect()
 # COMMAND ----------
- 
-dfRdd.show()
- 
+print(sample.collect())
 # COMMAND ----------
- 
-dfRdd.printSchema()
- 
+flatquiz = sample.flatMap(lambda x: x.split(" "))
+flatquiz.collect()
+# COMMAND ----------
