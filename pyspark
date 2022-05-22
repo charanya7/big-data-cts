@@ -39,3 +39,54 @@ print(tuplerdd1.collect())
 print(setrdd1.collect())
 print(dictrdd1.collect())
 #for dict it prints only keys not values.
+==============================================================================================================
+rdd = sc.textFile('FileStore/tables/ch-2.txt') #in this file all nums are in same line
+rdd.collect()
+# Out[6]: ['1 2 3 4 5 5 6 7 8 9 1']
+rdd = sc.textFile('FileStore/tables/ch-1.txt') #in this file each num is single line
+rdd.collect()
+# Out[8]: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+# so no.of objects = no.of lines in file
+================================================================================================================
+# Databricks notebook source
+from pyspark import SparkConf, SparkContext
+conf = SparkConf().setAppName("RDD")
+sc = SparkContext.getOrCreate(conf=conf)
+ 
+# COMMAND ----------
+ 
+rdd = sc.textFile('/FileStore/tables/StudentData.csv')
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+headers = rdd.first()
+print(headers)
+ 
+# COMMAND ----------
+ 
+rdd = rdd.filter(lambda x: x != headers).map(lambda x: x.split(','))
+rdd.collect()
+ 
+# COMMAND ----------
+ 
+print(type(headers))
+ 
+# COMMAND ----------
+ 
+columns = headers.split(',')
+print(columns)
+ 
+# COMMAND ----------
+ 
+#format of syntax to convert the rdd to data frame
+dfRdd = rdd.toDF(columns)
+ 
+# COMMAND ----------
+ 
+dfRdd.show()
+ 
+# COMMAND ----------
+ 
+dfRdd.printSchema()
+ 
